@@ -1,15 +1,11 @@
 /* ==========================================================
-   KBHFILMS
+   KBHFILMS V2
    Premium Cinematic Portfolio
 ========================================================== */
 
-/* ===========================
-   RESET
-=========================== */
+/* ---------- RESET ---------- */
 
-*,
-*::before,
-*::after{
+*{
     margin:0;
     padding:0;
     box-sizing:border-box;
@@ -22,9 +18,9 @@ html{
 body{
 
     background:#050505;
-    color:#f5f5f5;
+    color:#ffffff;
 
-    font-family:'DM Sans',sans-serif;
+    font-family:"DM Sans",sans-serif;
 
     overflow-x:hidden;
 
@@ -33,43 +29,47 @@ body{
 }
 
 img{
-    max-width:100%;
+
     display:block;
+    max-width:100%;
+
 }
 
 a{
-    text-decoration:none;
+
     color:inherit;
+    text-decoration:none;
+
 }
 
 button{
+
     border:none;
     background:none;
     cursor:pointer;
-    color:inherit;
+
 }
+
+/* ---------- VARIABLES ---------- */
 
 :root{
 
-    --black:#050505;
-    --black2:#0d0d0d;
+    --bg:#050505;
+    --bg2:#101010;
 
     --white:#ffffff;
 
-    --gold:#d7b36a;
+    --gold:#D8B36A;
 
-    --gray:#8e8e8e;
+    --gray:#8b8b8b;
 
     --border:rgba(255,255,255,.08);
 
-    --transition:.45s cubic-bezier(.22,.61,.36,1);
+    --transition:.4s ease;
 
 }
 
-
-/* ===========================
-   GLOBAL
-=========================== */
+/* ---------- GLOBAL ---------- */
 
 .section{
 
@@ -86,15 +86,13 @@ button{
 
     justify-content:space-between;
 
-    align-items:center;
+    margin-bottom:60px;
 
-    margin-bottom:70px;
+    color:var(--gray);
 
     font-size:12px;
 
     letter-spacing:3px;
-
-    color:var(--gray);
 
     text-transform:uppercase;
 
@@ -116,17 +114,15 @@ button{
 
 .section-heading h2{
 
-    font-size:clamp(50px,8vw,120px);
+    font-family:"Space Grotesk",sans-serif;
 
-    font-family:'Space Grotesk',sans-serif;
+    font-size:clamp(60px,8vw,120px);
 
-    line-height:.95;
-
-    font-weight:700;
+    line-height:.9;
 
 }
 
-.section-heading h2 span{
+.section-heading span{
 
     color:var(--gold);
 
@@ -134,18 +130,15 @@ button{
 
 .section-heading p{
 
-    max-width:430px;
+    max-width:450px;
 
-    line-height:1.8;
+    color:#bdbdbd;
 
-    color:#bcbcbc;
+    line-height:1.9;
 
 }
 
-
-/* ===========================
-   PRELOADER
-=========================== */
+/* ---------- PRELOADER ---------- */
 
 .preloader{
 
@@ -176,7 +169,7 @@ button{
 
     color:#666;
 
-    font-size:11px;
+    font-size:12px;
 
     letter-spacing:3px;
 
@@ -190,13 +183,11 @@ button{
 
 .preloader-logo{
 
-    font-size:64px;
+    font-family:"Space Grotesk";
+
+    font-size:70px;
 
     font-weight:700;
-
-    font-family:'Space Grotesk';
-
-    letter-spacing:4px;
 
 }
 
@@ -212,9 +203,9 @@ button{
 
     height:2px;
 
-    background:#222;
-
     margin:40px auto;
+
+    background:#222;
 
     overflow:hidden;
 
@@ -232,24 +223,21 @@ button{
 
 .loading-info{
 
-    display:flex;
-
-    justify-content:space-between;
-
     width:360px;
 
     margin:auto;
 
-    font-size:12px;
+    display:flex;
+
+    justify-content:space-between;
 
     color:#777;
 
+    font-size:12px;
+
 }
 
-
-/* ===========================
-   NAVBAR
-=========================== */
+/* ---------- NAVBAR ---------- */
 
 .navbar{
 
@@ -281,9 +269,9 @@ button{
 
 .logo{
 
-    font-size:26px;
+    font-family:"Space Grotesk";
 
-    font-family:'Space Grotesk';
+    font-size:28px;
 
     font-weight:700;
 
@@ -301,31 +289,17 @@ button{
 
     display:flex;
 
-    gap:40px;
+    gap:42px;
 
 }
 
 .desktop-nav a{
 
-    display:flex;
-
-    flex-direction:column;
-
-    gap:4px;
-
-    font-size:12px;
+    font-size:13px;
 
     letter-spacing:2px;
 
     transition:var(--transition);
-
-}
-
-.desktop-nav span{
-
-    color:#777;
-
-    font-size:10px;
 
 }
 
@@ -341,24 +315,41 @@ button{
 
 }
 
+/* ---------- MOBILE MENU ---------- */
 
-/* ===========================
+.mobile-navigation{
+
+    display:none;
+
+}
+
+.mobile-navigation a{
+
+    display:block;
+
+    margin:28px 0;
+
+    font-size:26px;
+
+    font-family:"Space Grotesk";
+
+}/* ==========================================================
    HERO
-=========================== */
+========================================================== */
 
 .hero{
 
-    min-height:100vh;
-
     position:relative;
+
+    min-height:100vh;
 
     display:flex;
 
     align-items:center;
 
-    overflow:hidden;
-
     padding:0 5%;
+
+    overflow:hidden;
 
 }
 
@@ -368,7 +359,7 @@ button{
 
     inset:0;
 
-    z-index:-1;
+    z-index:-2;
 
 }
 
@@ -398,27 +389,27 @@ button{
 
     border-radius:50%;
 
-    filter:blur(150px);
+    filter:blur(140px);
 
 }
 
 .hero-orb-one{
 
-    background:#5b3b08;
+    top:-220px;
 
-    top:-250px;
+    right:-180px;
 
-    right:-150px;
+    background:#5d4315;
 
 }
 
 .hero-orb-two{
 
-    background:#222;
+    bottom:-280px;
 
-    bottom:-300px;
+    left:-180px;
 
-    left:-250px;
+    background:#1b1b1b;
 
 }
 
@@ -428,7 +419,7 @@ button{
 
     inset:0;
 
-    opacity:.05;
+    opacity:.04;
 
     background-image:url("https://grainy-gradients.vercel.app/noise.svg");
 
@@ -436,7 +427,7 @@ button{
 
 .hero-content{
 
-    width:min(1000px,100%);
+    width:min(1100px,100%);
 
 }
 
@@ -454,11 +445,11 @@ button{
 
 .hero-title{
 
-    font-size:clamp(70px,11vw,170px);
+    font-family:"Space Grotesk";
+
+    font-size:clamp(72px,11vw,170px);
 
     line-height:.88;
-
-    font-family:'Space Grotesk';
 
     font-weight:700;
 
@@ -474,13 +465,13 @@ button{
 
     margin-top:40px;
 
-    max-width:600px;
+    max-width:620px;
 
     font-size:20px;
 
-    color:#c5c5c5;
+    line-height:1.9;
 
-    line-height:1.8;
+    color:#c9c9c9;
 
 }
 
@@ -488,13 +479,11 @@ button{
 
     display:flex;
 
-    gap:25px;
+    gap:24px;
 
-    margin-top:60px;
+    margin-top:55px;
 
-}/* ===========================
-   HERO BUTTONS
-=========================== */
+}
 
 .button{
 
@@ -502,19 +491,19 @@ button{
 
     align-items:center;
 
-    gap:14px;
+    justify-content:center;
 
-    padding:18px 34px;
+    padding:18px 36px;
 
     border-radius:999px;
-
-    transition:var(--transition);
 
     font-size:13px;
 
     letter-spacing:2px;
 
     text-transform:uppercase;
+
+    transition:var(--transition);
 
 }
 
@@ -530,74 +519,25 @@ button{
 
 .button-primary:hover{
 
-    transform:translateY(-4px);
+    transform:translateY(-5px);
 
-    box-shadow:0 18px 45px rgba(215,179,106,.25);
+    box-shadow:0 18px 40px rgba(216,179,106,.30);
 
 }
 
 .button-text{
 
-    border:1px solid rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.12);
 
 }
 
 .button-text:hover{
 
-    border-color:var(--gold);
-
     color:var(--gold);
 
-}
-
-.hero-footer{
-
-    position:absolute;
-
-    left:5%;
-
-    right:5%;
-
-    bottom:40px;
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    color:#777;
-
-    font-size:12px;
-
-    letter-spacing:2px;
+    border-color:var(--gold);
 
 }
-
-.hero-scroll{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:12px;
-
-}
-
-.hero-scroll i{
-
-    width:40px;
-
-    height:1px;
-
-    background:var(--gold);
-
-}
-
-
-/* ===========================
-   CAMERA HUD
-=========================== */
 
 .camera-hud{
 
@@ -607,7 +547,7 @@ button{
 
     pointer-events:none;
 
-    font-family:'Space Mono',monospace;
+    font-family:"Space Mono",monospace;
 
     font-size:11px;
 
@@ -616,9 +556,7 @@ button{
 }
 
 .hud-top-left,
-.hud-top-right,
-.hud-bottom-left,
-.hud-bottom-right{
+.hud-top-right{
 
     position:absolute;
 
@@ -644,22 +582,6 @@ button{
 
 }
 
-.hud-bottom-left{
-
-    bottom:0;
-
-    left:0;
-
-}
-
-.hud-bottom-right{
-
-    bottom:0;
-
-    right:0;
-
-}
-
 .rec{
 
     display:flex;
@@ -678,7 +600,7 @@ button{
 
     border-radius:50%;
 
-    background:#ff3a3a;
+    background:#ff3d3d;
 
     animation:blink 1s infinite;
 
@@ -692,127 +614,13 @@ button{
 
     }
 
-}
-
-
-/* ===========================
-   INTRO
-=========================== */
-
-.intro{
-
-    display:grid;
-
-    grid-template-columns:220px 1fr;
-
-    gap:60px;
-
-    align-items:start;
-
-}
-
-.intro-title{
-
-    font-size:clamp(46px,7vw,92px);
-
-    line-height:1;
-
-    font-family:'Space Grotesk',sans-serif;
-
-    margin-bottom:70px;
-
-}
-
-.intro-title em{
-
-    font-style:normal;
-
-    color:var(--gold);
-
-}
-
-.intro-title strong{
-
-    color:var(--gold);
-
-}
-
-.intro-bottom{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    gap:80px;
-
-    align-items:flex-end;
-
-}
-
-.intro-bottom p{
-
-    max-width:620px;
-
-    color:#b9b9b9;
-
-    line-height:2;
-
-    font-size:18px;
-
-}
-
-.intro-mark{
-
-    width:180px;
-
-    aspect-ratio:1;
-
-    border:1px solid rgba(255,255,255,.08);
-
-    border-radius:50%;
-
-    display:flex;
-
-    flex-direction:column;
-
-    align-items:center;
-
-    justify-content:center;
-
-}
-
-.intro-mark span{
-
-    font-size:42px;
-
-    font-family:'Space Grotesk';
-
-    color:var(--gold);
-
-}
-
-.intro-mark small{
-
-    text-align:center;
-
-    margin-top:12px;
-
-    color:#777;
-
-    line-height:1.6;
-
-    letter-spacing:2px;
-
-}
-
-
-/* ===========================
-   WORK
-=========================== */
+}/* ==========================================================
+   FEATURED WORK
+========================================================== */
 
 .featured-work{
 
-    margin-bottom:120px;
+    margin-top:40px;
 
 }
 
@@ -826,10 +634,10 @@ button{
 
     overflow:hidden;
 
-    background:
-    radial-gradient(circle at top,#393939,#0b0b0b);
+    border:1px solid var(--border);
 
-    border:1px solid rgba(255,255,255,.08);
+    background:
+    radial-gradient(circle at top,#2b2b2b,#090909);
 
 }
 
@@ -840,9 +648,11 @@ button{
     inset:0;
 
     background:
-    linear-gradient(to top,
-    rgba(0,0,0,.85),
-    rgba(0,0,0,.15));
+    linear-gradient(
+        to top,
+        rgba(0,0,0,.82),
+        rgba(0,0,0,.15)
+    );
 
 }
 
@@ -850,11 +660,11 @@ button{
 
     position:absolute;
 
-    left:45px;
+    top:40px;
 
-    top:45px;
+    left:40px;
 
-    z-index:3;
+    z-index:2;
 
 }
 
@@ -862,19 +672,23 @@ button{
 
     display:block;
 
-    color:#aaa;
+    font-size:12px;
 
     letter-spacing:3px;
 
-    font-size:12px;
+    color:#bcbcbc;
 
 }
 
 .fake-film strong{
 
-    font-size:54px;
+    display:block;
 
-    font-family:'Space Grotesk';
+    margin-top:12px;
+
+    font-family:"Space Grotesk";
+
+    font-size:58px;
 
 }
 
@@ -892,13 +706,13 @@ button{
 
     border-radius:50%;
 
-    border:1px solid rgba(255,255,255,.25);
-
-    backdrop-filter:blur(20px);
-
     display:grid;
 
     place-items:center;
+
+    border:1px solid rgba(255,255,255,.25);
+
+    backdrop-filter:blur(15px);
 
     font-size:34px;
 
@@ -918,27 +732,27 @@ button{
 
     position:absolute;
 
-    bottom:35px;
-
     left:40px;
 
-    font-size:13px;
+    bottom:40px;
 
     letter-spacing:4px;
 
-    color:#ddd;
+    font-size:12px;
+
+    color:#d7d7d7;
 
 }
 
 .featured-info{
 
+    margin-top:35px;
+
     display:flex;
 
     justify-content:space-between;
 
-    align-items:end;
-
-    margin-top:35px;
+    align-items:flex-end;
 
 }
 
@@ -946,9 +760,9 @@ button{
 
     color:var(--gold);
 
-    letter-spacing:3px;
-
     font-size:12px;
+
+    letter-spacing:3px;
 
 }
 
@@ -956,21 +770,23 @@ button{
 
     margin-top:18px;
 
-    font-size:54px;
+    font-family:"Space Grotesk";
 
-    line-height:1;
+    font-size:56px;
 
-    font-family:'Space Grotesk';
+    line-height:.95;
 
 }
 
 .project-arrow{
 
-    font-size:14px;
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
 
     letter-spacing:2px;
-
-    color:#d9d9d9;
 
     transition:var(--transition);
 
@@ -980,14 +796,18 @@ button{
 
     color:var(--gold);
 
-}/* ===========================
+}
+
+/* ==========================================================
    CREATIVE WORLDS
-=========================== */
+========================================================== */
 
 .creative-worlds{
 
     display:flex;
+
     flex-direction:column;
+
     gap:60px;
 
 }
@@ -995,12 +815,14 @@ button{
 .world-heading{
 
     display:flex;
+
     justify-content:space-between;
-    align-items:center;
+
+    color:#888;
+
+    letter-spacing:3px;
 
     font-size:12px;
-    letter-spacing:3px;
-    color:#777;
 
     text-transform:uppercase;
 
@@ -1009,15 +831,16 @@ button{
 .world-card{
 
     display:grid;
-    grid-template-columns:80px 1.2fr 1fr;
+
+    grid-template-columns:80px 1.15fr 1fr;
 
     gap:45px;
 
     align-items:center;
 
-    padding:40px 0;
+    padding:45px 0;
 
-    border-top:1px solid rgba(255,255,255,.08);
+    border-top:1px solid var(--border);
 
     transition:var(--transition);
 
@@ -1025,7 +848,7 @@ button{
 
 .world-card:last-child{
 
-    border-bottom:1px solid rgba(255,255,255,.08);
+    border-bottom:1px solid var(--border);
 
 }
 
@@ -1037,11 +860,11 @@ button{
 
 .world-number{
 
-    font-size:18px;
+    font-family:"Space Mono";
 
     color:var(--gold);
 
-    font-family:'Space Mono',monospace;
+    font-size:18px;
 
 }
 
@@ -1055,30 +878,37 @@ button{
 
     overflow:hidden;
 
-    display:flex;
+    border:1px solid var(--border);
 
-    align-items:center;
+    display:flex;
 
     justify-content:center;
 
-    border:1px solid rgba(255,255,255,.08);
+    align-items:center;
 
 }
 
-.world-visual::before{
+.ads{
 
-    content:"";
+    background:radial-gradient(circle at top,#6d531f,#111);
 
-    position:absolute;
+}
 
-    inset:0;
+.ugc{
 
-    background:
-    linear-gradient(
-        180deg,
-        rgba(255,255,255,.05),
-        rgba(0,0,0,.35)
-    );
+    background:radial-gradient(circle at top,#363636,#0b0b0b);
+
+}
+
+.podcast{
+
+    background:radial-gradient(circle at top,#163344,#080808);
+
+}
+
+.wedding{
+
+    background:radial-gradient(circle at top,#6f5a39,#0a0a0a);
 
 }
 
@@ -1086,9 +916,9 @@ button{
 
     position:relative;
 
-    z-index:2;
-
     text-align:center;
+
+    z-index:2;
 
 }
 
@@ -1096,11 +926,11 @@ button{
 
     display:block;
 
-    margin-bottom:14px;
-
-    color:#c9c9c9;
+    margin-bottom:12px;
 
     letter-spacing:3px;
+
+    color:#d0d0d0;
 
     font-size:11px;
 
@@ -1108,13 +938,9 @@ button{
 
 .world-center h3{
 
-    font-family:'Space Grotesk',sans-serif;
+    font-family:"Space Grotesk";
 
     font-size:58px;
-
-    line-height:1;
-
-    color:#fff;
 
 }
 
@@ -1122,111 +948,11 @@ button{
 
     display:block;
 
-    margin-top:18px;
-
-    font-size:12px;
+    margin-top:16px;
 
     color:#bdbdbd;
 
-    letter-spacing:2px;
-
-}
-
-/* Backgrounds */
-
-.ads{
-
-    background:
-    radial-gradient(circle at top,#5d4415,#111);
-
-}
-
-.ugc{
-
-    background:
-    radial-gradient(circle at top,#2b2b2b,#090909);
-
-}
-
-.podcast{
-
-    background:
-    radial-gradient(circle at top,#173042,#080808);
-
-}
-
-.wedding{
-
-    background:
-    radial-gradient(circle at top,#6d5b3d,#0a0a0a);
-
-}
-
-/* Sound Bars */
-
-.sound-bars{
-
-    position:absolute;
-
-    bottom:35px;
-
-    left:50%;
-
-    transform:translateX(-50%);
-
-    display:flex;
-
-    gap:6px;
-
-}
-
-.sound-bars i{
-
-    width:5px;
-
-    height:28px;
-
-    background:var(--gold);
-
-    border-radius:20px;
-
-    animation:equalizer 1.4s infinite ease-in-out;
-
-}
-
-.sound-bars i:nth-child(2){animation-delay:.15s;}
-.sound-bars i:nth-child(3){animation-delay:.30s;}
-.sound-bars i:nth-child(4){animation-delay:.45s;}
-.sound-bars i:nth-child(5){animation-delay:.60s;}
-.sound-bars i:nth-child(6){animation-delay:.75s;}
-.sound-bars i:nth-child(7){animation-delay:.90s;}
-.sound-bars i:nth-child(8){animation-delay:1.05s;}
-
-@keyframes equalizer{
-
-    0%,100%{
-
-        height:18px;
-
-    }
-
-    50%{
-
-        height:52px;
-
-    }
-
-}
-
-.world-info{
-
-    display:flex;
-
-    flex-direction:column;
-
-    justify-content:space-between;
-
-    height:100%;
+    font-size:12px;
 
 }
 
@@ -1242,41 +968,35 @@ button{
 
 .world-info h4{
 
-    margin-top:18px;
+    margin:18px 0;
+
+    font-family:"Space Grotesk";
 
     font-size:42px;
 
-    line-height:1.05;
-
-    font-family:'Space Grotesk',sans-serif;
+    line-height:1.1;
 
 }
 
 .world-info p{
 
-    margin:28px 0;
-
     color:#bdbdbd;
 
     line-height:1.9;
+
+    margin-bottom:28px;
 
 }
 
 .world-info a{
 
-    display:inline-flex;
-
-    width:max-content;
+    display:inline-block;
 
     padding-bottom:6px;
 
     border-bottom:1px solid rgba(255,255,255,.15);
 
     transition:var(--transition);
-
-    letter-spacing:2px;
-
-    font-size:13px;
 
 }
 
@@ -1286,17 +1006,15 @@ button{
 
     border-color:var(--gold);
 
-}/* ===========================
+}/* ==========================================================
    MANIFESTO
-=========================== */
+========================================================== */
 
 .manifesto{
 
-    background:#f5f5f5;
+    background:#f6f6f6;
 
     color:#111;
-
-    position:relative;
 
     overflow:hidden;
 
@@ -1314,19 +1032,17 @@ button{
 
 .dark-meta{
 
-    color:#666;
+    color:#777;
 
 }
 
 .manifesto h2{
 
-    font-family:'Space Grotesk',sans-serif;
+    font-family:"Space Grotesk";
 
-    font-size:clamp(52px,8vw,120px);
+    font-size:clamp(60px,8vw,130px);
 
-    line-height:.95;
-
-    font-weight:700;
+    line-height:.92;
 
     max-width:1200px;
 
@@ -1334,7 +1050,7 @@ button{
 
 .manifesto h2 span{
 
-    color:#b38a36;
+    color:#b58a35;
 
 }
 
@@ -1348,7 +1064,7 @@ button{
 
     gap:80px;
 
-    margin-top:90px;
+    margin-top:80px;
 
 }
 
@@ -1356,11 +1072,11 @@ button{
 
     max-width:620px;
 
-    font-size:20px;
-
     line-height:2;
 
     color:#444;
+
+    font-size:20px;
 
 }
 
@@ -1370,7 +1086,7 @@ button{
 
     height:180px;
 
-    border:2px solid rgba(0,0,0,.12);
+    border:2px solid rgba(0,0,0,.15);
 
     border-radius:50%;
 
@@ -1378,20 +1094,19 @@ button{
 
     place-items:center;
 
-    font-size:46px;
+    font-family:"Space Grotesk";
 
-    font-family:'Space Grotesk';
+    font-size:48px;
 
-    color:#b38a36;
+    color:#b58a35;
 
-    transform:rotate(-12deg);
+    transform:rotate(-10deg);
 
 }
 
-
-/* ===========================
+/* ==========================================================
    PROCESS
-=========================== */
+========================================================== */
 
 .process-list{
 
@@ -1413,7 +1128,7 @@ button{
 
     padding:45px 0;
 
-    border-top:1px solid rgba(255,255,255,.08);
+    border-top:1px solid var(--border);
 
     transition:var(--transition);
 
@@ -1421,35 +1136,35 @@ button{
 
 .process-item:last-child{
 
-    border-bottom:1px solid rgba(255,255,255,.08);
+    border-bottom:1px solid var(--border);
 
 }
 
 .process-item:hover{
 
-    padding-left:24px;
+    padding-left:25px;
 
-    border-color:rgba(215,179,106,.35);
+    border-color:rgba(216,179,106,.35);
 
 }
 
 .process-number{
 
-    font-size:18px;
+    font-family:"Space Mono";
 
     color:var(--gold);
 
-    font-family:'Space Mono',monospace;
+    font-size:18px;
 
 }
 
 .process-content h3{
 
-    font-family:'Space Grotesk',sans-serif;
+    font-family:"Space Grotesk";
 
     font-size:42px;
 
-    margin-bottom:14px;
+    margin-bottom:16px;
 
 }
 
@@ -1459,15 +1174,15 @@ button{
 
     line-height:1.9;
 
-    max-width:650px;
+    max-width:620px;
 
 }
 
 .process-symbol{
 
-    font-size:46px;
+    font-size:48px;
 
-    color:#444;
+    color:#555;
 
     transition:var(--transition);
 
@@ -1479,9 +1194,11 @@ button{
 
     transform:rotate(90deg);
 
-}/* ===========================
+}
+
+/* ==========================================================
    ABOUT
-=========================== */
+========================================================== */
 
 .about-grid{
 
@@ -1491,15 +1208,15 @@ button{
 
     gap:100px;
 
-    align-items:start;
+    align-items:flex-start;
 
 }
 
 .about-heading h2{
 
-    font-family:'Space Grotesk',sans-serif;
+    font-family:"Space Grotesk";
 
-    font-size:clamp(54px,8vw,110px);
+    font-size:clamp(60px,8vw,120px);
 
     line-height:.92;
 
@@ -1517,7 +1234,7 @@ button{
 
     flex-direction:column;
 
-    gap:28px;
+    gap:30px;
 
 }
 
@@ -1525,9 +1242,9 @@ button{
 
     font-size:28px;
 
-    line-height:1.6;
-
     color:#fff;
+
+    line-height:1.6;
 
 }
 
@@ -1535,7 +1252,7 @@ button{
 
     color:#bdbdbd;
 
-    line-height:1.9;
+    line-height:2;
 
 }
 
@@ -1543,15 +1260,15 @@ button{
 
     border-left:3px solid var(--gold);
 
-    padding-left:24px;
+    padding-left:25px;
+
+    font-family:"Space Grotesk";
 
     font-size:32px;
 
-    font-family:'Space Grotesk';
-
     line-height:1.4;
 
-    margin:18px 0;
+    margin:10px 0;
 
 }
 
@@ -1563,19 +1280,19 @@ button{
 
     gap:20px;
 
-    margin-top:30px;
+    margin-top:20px;
 
 }
 
 .about-facts div{
 
-    padding:25px;
+    background:#101010;
 
-    border:1px solid rgba(255,255,255,.08);
+    border:1px solid var(--border);
 
     border-radius:18px;
 
-    background:#0d0d0d;
+    padding:24px;
 
 }
 
@@ -1583,11 +1300,11 @@ button{
 
     display:block;
 
-    color:#888;
-
-    font-size:11px;
+    color:#777;
 
     letter-spacing:2px;
+
+    font-size:11px;
 
     margin-bottom:10px;
 
@@ -1597,14 +1314,9 @@ button{
 
     font-size:15px;
 
-    color:#fff;
-
-}
-
-
-/* ===========================
+}/* ==========================================================
    CONTACT
-=========================== */
+========================================================== */
 
 .contact{
 
@@ -1646,8 +1358,6 @@ button{
 
     transform:translate(-50%,-50%);
 
-    opacity:.9;
-
 }
 
 .contact-content{
@@ -1664,17 +1374,17 @@ button{
 
     letter-spacing:3px;
 
-    font-size:13px;
+    margin-bottom:25px;
 
-    margin-bottom:28px;
+    font-size:13px;
 
 }
 
 .contact h2{
 
-    font-family:'Space Grotesk';
+    font-family:"Space Grotesk";
 
-    font-size:clamp(60px,9vw,140px);
+    font-size:clamp(60px,9vw,150px);
 
     line-height:.9;
 
@@ -1692,17 +1402,17 @@ button{
 
     align-items:center;
 
-    gap:18px;
+    gap:15px;
 
     margin-top:60px;
 
     padding:22px 42px;
 
-    border-radius:999px;
-
     background:var(--gold);
 
     color:#111;
+
+    border-radius:999px;
 
     font-weight:700;
 
@@ -1714,14 +1424,11 @@ button{
 
     transform:translateY(-6px);
 
-    box-shadow:0 20px 60px rgba(215,179,106,.25);
-
 }
 
-
-/* ===========================
+/* ==========================================================
    FOOTER
-=========================== */
+========================================================== */
 
 footer{
 
@@ -1731,7 +1438,7 @@ footer{
 
     padding:70px 0;
 
-    border-top:1px solid rgba(255,255,255,.08);
+    border-top:1px solid var(--border);
 
 }
 
@@ -1743,13 +1450,13 @@ footer{
 
     align-items:center;
 
-    margin-bottom:60px;
+    margin-bottom:50px;
 
 }
 
 .footer-logo{
 
-    font-family:'Space Grotesk';
+    font-family:"Space Grotesk";
 
     font-size:42px;
 
@@ -1766,8 +1473,6 @@ footer{
 .footer-main p{
 
     color:#888;
-
-    letter-spacing:2px;
 
 }
 
@@ -1797,10 +1502,9 @@ footer{
 
 }
 
-
-/* ===========================
-   REVEAL ANIMATION
-=========================== */
+/* ==========================================================
+   ANIMATIONS
+========================================================== */
 
 .reveal{
 
@@ -1820,10 +1524,9 @@ footer{
 
 }
 
-
-/* ===========================
+/* ==========================================================
    RESPONSIVE
-=========================== */
+========================================================== */
 
 @media(max-width:992px){
 
@@ -1845,7 +1548,7 @@ footer{
 
     .menu-toggle span{
 
-        width:26px;
+        width:28px;
 
         height:2px;
 
@@ -1853,13 +1556,10 @@ footer{
 
     }
 
-    .intro,
-    .about-grid,
     .section-heading,
     .featured-info,
-    .manifesto-bottom{
-
-        grid-template-columns:1fr;
+    .manifesto-bottom,
+    .about-grid{
 
         display:block;
 
@@ -1884,20 +1584,13 @@ footer{
     }
 
     .footer-main,
-    .footer-bottom,
-    .hero-footer{
+    .footer-bottom{
 
         flex-direction:column;
 
-        gap:24px;
-
         align-items:flex-start;
 
-    }
-
-    .featured-image{
-
-        height:420px;
+        gap:20px;
 
     }
 
@@ -1907,7 +1600,7 @@ footer{
 
     .hero-title{
 
-        font-size:64px;
+        font-size:62px;
 
     }
 
@@ -1919,15 +1612,15 @@ footer{
 
     }
 
-    .section{
+    .featured-image{
 
-        padding:90px 0;
+        height:420px;
 
     }
 
-    .contact{
+    .section{
 
-        padding:120px 5%;
+        padding:90px 0;
 
     }
 
