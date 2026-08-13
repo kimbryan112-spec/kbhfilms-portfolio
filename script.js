@@ -185,6 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 
+<<<<<<< HEAD
 });/* ==========================================
    FEATURED PROJECT VIDEO
 ========================================== */
@@ -270,3 +271,6 @@ if (adsTrack) {
     animateAds();
 
 }
+=======
+});
+>>>>>>> 1833b60616200e7b94451ac0b65ec1d0f2fe5186
