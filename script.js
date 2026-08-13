@@ -1,47 +1,62 @@
-/* ==========================================
-   PRELOADER
-========================================== */
+/*=========================================================
+KBHFILMS V2
+=========================================================*/
+
+"use strict";
+
+/*=========================================================
+SELECTORS
+=========================================================*/
+
+const body = document.body;
+
+const navbar = document.querySelector(".navbar");
+
+const menuBtn = document.querySelector(".menu-toggle");
+
+const mobileMenu = document.querySelector(".mobile-menu");
+
+const hero = document.querySelector(".hero");
+
+const heroVideo = document.querySelector(".hero-video");
+
+const featuredVideo = document.querySelector(".featured-video");
+
+const serviceVideos = document.querySelectorAll(".service-video");
+
+const adsVideos = document.querySelectorAll(".ads-video");
+
+const revealElements = document.querySelectorAll(".section");
+
+const preloader = document.querySelector(".preloader");
+
+const cursor = document.querySelector(".cursor");
+
+const cursorDot = document.querySelector(".cursor-dot");
+
+/*=========================================================
+PRELOADER
+=========================================================*/
 
 window.addEventListener("load", () => {
 
-    const preloader = document.getElementById("preloader");
-    const loadingBar = document.getElementById("loadingBar");
-    const loadingNumber = document.getElementById("loadingNumber");
+    setTimeout(() => {
 
-    let progress = 0;
+        preloader.classList.add("hide");
 
-    const loader = setInterval(() => {
+        body.classList.remove("loading");
 
-        progress++;
-
-        loadingBar.style.width = progress + "%";
-        loadingNumber.textContent = progress.toString().padStart(2, "0");
-
-        if (progress >= 100) {
-
-            clearInterval(loader);
-
-            preloader.classList.add("hide");
-
-            setTimeout(() => {
-                preloader.remove();
-            }, 900);
-
-        }
-
-    }, 18);
+    }, 1200);
 
 });
 
-/* ==========================================
-   NAVBAR
-========================================== */
-
-const navbar = document.getElementById("navbar");
+/*=========================================================
+NAVBAR
+=========================================================*/
 
 window.addEventListener("scroll", () => {
 
-    if (window.scrollY > 60) {
+    if (window.scrollY > 80) {
 
         navbar.classList.add("scrolled");
 
@@ -53,271 +68,438 @@ window.addEventListener("scroll", () => {
 
 });
 
-/* ==========================================
-   MOBILE MENU
-========================================== */
+/*=========================================================
+MOBILE MENU
+=========================================================*/
 
-const menuToggle = document.getElementById("menuToggle");
-const mobileNavigation = document.getElementById("mobileNavigation");
+menuBtn.addEventListener("click", () => {
 
-menuToggle.addEventListener("click", () => {
+    menuBtn.classList.toggle("active");
 
-    menuToggle.classList.toggle("active");
-    mobileNavigation.classList.toggle("active");
+    mobileMenu.classList.toggle("active");
 
 });
 
-document.querySelectorAll(".mobile-navigation a").forEach(link => {
+mobileMenu.querySelectorAll("a").forEach(link => {
 
     link.addEventListener("click", () => {
 
-        menuToggle.classList.remove("active");
-        mobileNavigation.classList.remove("active");
+        mobileMenu.classList.remove("active");
+
+        menuBtn.classList.remove("active");
 
     });
 
 });
 
-/* ==========================================
-   REVEAL ON SCROLL
-========================================== */
+/*=========================================================
+CUSTOM CURSOR
+=========================================================*/
 
-const reveals = document.querySelectorAll(".reveal");
+window.addEventListener("mousemove", e => {
 
-function revealSections() {
+    cursor.style.transform =
 
-    reveals.forEach(section => {
+        `translate(${e.clientX}px,${e.clientY}px)`;
 
-        const top = section.getBoundingClientRect().top;
+    cursorDot.style.transform =
 
-        if (top < window.innerHeight * 0.85) {
-
-            section.classList.add("active");
-
-        }
-
-    });
-
-}
-
-window.addEventListener("scroll", revealSections);
-window.addEventListener("load", revealSections);
-
-/* ==========================================
-   SMOOTH SCROLL
-========================================== */
-
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-
-    anchor.addEventListener("click", function (e) {
-
-        const target = document.querySelector(this.getAttribute("href"));
-
-        if (!target) return;
-
-        e.preventDefault();
-
-        target.scrollIntoView({
-
-            behavior: "smooth",
-            block: "start"
-
-        });
-
-    });
-
-});/* ==========================================
-   HERO PARALLAX
-========================================== */
-
-const hero = document.querySelector(".hero");
-const orbOne = document.querySelector(".hero-orb-one");
-const orbTwo = document.querySelector(".hero-orb-two");
-
-if (hero && orbOne && orbTwo) {
-
-    hero.addEventListener("mousemove", (e) => {
-
-        const x = (e.clientX / window.innerWidth - 0.5) * 30;
-        const y = (e.clientY / window.innerHeight - 0.5) * 30;
-
-        orbOne.style.transform =
-            `translate(${x}px, ${y}px)`;
-
-        orbTwo.style.transform =
-            `translate(${-x}px, ${-y}px)`;
-
-    });
-
-}
-
-/* ==========================================
-   HERO VIDEO PLAYBACK
-========================================== */
-
-document.querySelectorAll("video").forEach(video => {
-
-    video.muted = true;
-    video.playsInline = true;
-
-    const playPromise = video.play();
-
-    if (playPromise !== undefined) {
-
-        playPromise.catch(() => {
-
-            video.setAttribute("muted", "");
-            video.play().catch(() => {});
-
-        });
-
-    }
+        `translate(${e.clientX}px,${e.clientY}px)`;
 
 });
 
-/* ==========================================
-   ADS AUTO SCROLL
-========================================== */
+/*=========================================================
+BUTTON HOVER
+=========================================================*/
 
-const adsTrack = document.querySelector(".ads-track");
+document.querySelectorAll(".btn").forEach(btn=>{
 
-if (adsTrack) {
+    btn.addEventListener("mouseenter",()=>{
 
-    const reels = [...adsTrack.children];
-
-    reels.forEach(reel => {
-
-        adsTrack.appendChild(reel.cloneNode(true));
+        cursor.classList.add("active");
 
     });
 
-    let position = 0;
+    btn.addEventListener("mouseleave",()=>{
 
-    function animateAds() {
-
-        position += 0.35;
-
-        if (position >= adsTrack.scrollWidth / 2) {
-
-            position = 0;
-
-        }
-
-        adsTrack.style.transform =
-            `translateX(-${position}px)`;
-
-        requestAnimationFrame(animateAds);
-
-    }
-
-    animateAds();
-
-}
-
-/* ==========================================
-   PAUSE CAROUSEL ON HOVER
-========================================== */
-
-if (adsTrack) {
-
-    let paused = false;
-    let pos = 0;
-
-    adsTrack.addEventListener("mouseenter", () => {
-
-        paused = true;
-
-    });
-
-    adsTrack.addEventListener("mouseleave", () => {
-
-        paused = false;
-
-    });
-
-    function loop() {
-
-        if (!paused) {
-
-            pos += 0.35;
-
-            if (pos >= adsTrack.scrollWidth / 2) {
-
-                pos = 0;
-
-            }
-
-            adsTrack.style.transform =
-                `translateX(-${pos}px)`;
-
-        }
-
-        requestAnimationFrame(loop);
-
-    }
-
-    adsTrack.style.willChange = "transform";
-    loop();
-
-}
-
-/* ==========================================
-   BUTTON RIPPLE
-========================================== */
-
-document.querySelectorAll(".button,.contact-button").forEach(button => {
-
-    button.addEventListener("mouseenter", () => {
-
-        button.style.transform = "translateY(-4px)";
-
-    });
-
-    button.addEventListener("mouseleave", () => {
-
-        button.style.transform = "";
+        cursor.classList.remove("active");
 
     });
 
 });
 
-/* ==========================================
-   CARD HOVER EFFECT
-========================================== */
+/*=========================================================
+SCROLL REVEAL
+=========================================================*/
 
-document.querySelectorAll(".world-card").forEach(card => {
+const revealObserver = new IntersectionObserver(
 
-    card.addEventListener("mousemove", e => {
+entries=>{
 
-        const rect = card.getBoundingClientRect();
+entries.forEach(entry=>{
 
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+if(entry.isIntersecting){
 
-        card.style.background =
-            `radial-gradient(circle at ${x}px ${y}px,
-            rgba(255,255,255,.05),
-            transparent 55%)`;
+entry.target.classList.add("show");
 
-    });
-
-    card.addEventListener("mouseleave", () => {
-
-        card.style.background = "";
-
-    });
+}
 
 });
 
-/* ==========================================
-   CURRENT YEAR
-========================================== */
+},
 
-const year = document.querySelector(".footer-bottom p");
+{
 
-if (year) {
-
-    year.innerHTML =
-        `© ${new Date().getFullYear()} KBHFILMS. All Rights Reserved.`;
+threshold:.15
 
 }
+
+);
+
+revealElements.forEach(section=>{
+
+revealObserver.observe(section);
+
+});
+
+/*=========================================================
+SMOOTH SCROLL
+=========================================================*/
+
+document.querySelectorAll('a[href^="#"]').forEach(anchor=>{
+
+anchor.addEventListener("click",function(e){
+
+e.preventDefault();
+
+const target=document.querySelector(
+
+this.getAttribute("href")
+
+);
+
+target.scrollIntoView({
+
+behavior:"smooth"
+
+});
+
+});
+
+});/*=========================================================
+SMART VIDEO SYSTEM
+=========================================================*/
+
+const videos = document.querySelectorAll("video");
+
+function pauseAllVideos() {
+
+    videos.forEach(video => {
+
+        video.pause();
+
+        video.muted = true;
+
+    });
+
+}
+
+const videoObserver = new IntersectionObserver(
+
+(entries) => {
+
+entries.forEach(entry => {
+
+const video = entry.target;
+
+if (entry.isIntersecting) {
+
+const promise = video.play();
+
+if (promise !== undefined) {
+
+promise.catch(() => {});
+
+}
+
+} else {
+
+video.pause();
+
+}
+
+});
+
+},
+
+{
+
+threshold:0.55
+
+}
+
+);
+
+videos.forEach(video=>{
+
+videoObserver.observe(video);
+
+});
+
+/*=========================================================
+HERO VIDEO AUDIO
+=========================================================*/
+
+const heroObserver = new IntersectionObserver(
+
+(entries)=>{
+
+entries.forEach(entry=>{
+
+if(entry.isIntersecting){
+
+heroVideo.muted=true;
+
+}else{
+
+heroVideo.pause();
+
+}
+
+});
+
+},
+
+{
+
+threshold:.35
+
+}
+
+);
+
+heroObserver.observe(hero);
+
+/*=========================================================
+SERVICE VIDEO AUDIO
+=========================================================*/
+
+const portfolioVideos=document.querySelectorAll(
+
+".featured-video,.service-video,.ads-video"
+
+);
+
+const audioObserver=new IntersectionObserver(
+
+(entries)=>{
+
+entries.forEach(entry=>{
+
+const video=entry.target;
+
+if(entry.isIntersecting){
+
+portfolioVideos.forEach(v=>{
+
+if(v!==video){
+
+v.muted=true;
+
+}
+
+});
+
+video.muted=false;
+
+video.play().catch(()=>{});
+
+}else{
+
+video.pause();
+
+video.muted=true;
+
+}
+
+});
+
+},
+
+{
+
+threshold:.75
+
+}
+
+);
+
+portfolioVideos.forEach(video=>{
+
+audioObserver.observe(video);
+
+});
+
+/*=========================================================
+REPLAY
+=========================================================*/
+
+videos.forEach(video=>{
+
+video.addEventListener("ended",()=>{
+
+video.currentTime=0;
+
+video.play();
+
+});
+
+});
+
+/*=========================================================
+REDUCE CPU
+=========================================================*/
+
+document.addEventListener(
+
+"visibilitychange",
+
+()=>{
+
+if(document.hidden){
+
+videos.forEach(video=>{
+
+video.pause();
+
+});
+
+}else{
+
+videos.forEach(video=>{
+
+const rect=video.getBoundingClientRect();
+
+if(
+
+rect.top<window.innerHeight&&
+
+rect.bottom>0
+
+){
+
+video.play().catch(()=>{});
+
+}
+
+});
+
+}
+
+});
+
+/*=========================================================
+LAZY PLAY
+=========================================================*/
+
+videos.forEach(video=>{
+
+video.preload="metadata";
+
+});
+
+/*=========================================================
+PARALLAX HERO
+=========================================================*/
+
+window.addEventListener(
+
+"scroll",
+
+()=>{
+
+const y=window.scrollY;
+
+heroVideo.style.transform=
+
+`scale(1.08) translateY(${y*.12}px)`;
+
+});
+
+/*=========================================================
+BUTTON RIPPLE
+=========================================================*/
+
+document.querySelectorAll(".btn").forEach(btn=>{
+
+btn.addEventListener("click",e=>{
+
+const ripple=document.createElement("span");
+
+ripple.className="ripple";
+
+const rect=btn.getBoundingClientRect();
+
+ripple.style.left=
+
+`${e.clientX-rect.left}px`;
+
+ripple.style.top=
+
+`${e.clientY-rect.top}px`;
+
+btn.appendChild(ripple);
+
+setTimeout(()=>{
+
+ripple.remove();
+
+},700);
+
+});
+
+});
+
+/*=========================================================
+SCROLL INDICATOR
+=========================================================*/
+
+window.addEventListener(
+
+"scroll",
+
+()=>{
+
+const indicator=document.querySelector(
+
+".scroll-indicator"
+
+);
+
+if(window.scrollY>150){
+
+indicator.style.opacity="0";
+
+}else{
+
+indicator.style.opacity="1";
+
+}
+
+});
+
+/*=========================================================
+PERFORMANCE
+=========================================================*/
+
+window.addEventListener(
+
+"resize",
+
+()=>{
+
+requestAnimationFrame(()=>{
+
+});
+
+});
