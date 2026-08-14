@@ -1268,6 +1268,22 @@ SERVICES
 
 }
 
+.service-video.is-fallback{
+
+    opacity:0;
+
+    visibility:hidden;
+
+    pointer-events:none;
+
+}
+
+.service-card.is-fallback{
+
+    background:#0f0f0f;
+
+}
+
 .service-card:hover .service-video{
 
     transform:scale(1.08);

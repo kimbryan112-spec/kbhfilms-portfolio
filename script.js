@@ -519,13 +519,17 @@ function ensureAdVideoSource(video) {
 
 }
 
-function applyMediaConfig() {
+function setupServicesMedia() {
 
-    setupHeroMedia();
+    if (!serviceVideos.length) {
 
-    setupFeaturedMedia();
+        return;
 
-    setupAdsMedia();
+    }
+
+    const saveData = isSaveDataConnection();
+
+    const mobile = isMobileViewport();
 
     const servicePaths = [
 
@@ -541,9 +545,87 @@ function applyMediaConfig() {
 
     serviceVideos.forEach((video, index) => {
 
-        setVideoSource(video, servicePaths[index]);
+        const path = servicePaths[index];
+
+        const card = video.closest(".service-card");
+
+        video.muted = true;
+
+        video.playsInline = true;
+
+        video.preload = mobile ? "none" : "metadata";
+
+        video.setAttribute("playsinline", "");
+
+        video.setAttribute("webkit-playsinline", "");
+
+        video.dataset.mediaPath = path;
+
+        video.addEventListener("error", function () {
+
+            fallbackVideoElement(video, card);
+
+            servicesVisibility.delete(video);
+
+            updateServicesPlayback();
+
+        });
+
+        if (saveData) {
+
+            return;
+
+        }
+
+        if (!mobile) {
+
+            setVideoSource(video, path);
+
+        }
 
     });
+
+}
+
+function ensureServiceVideoSource(video) {
+
+    if (!video || video.classList.contains("is-fallback") || isSaveDataConnection()) {
+
+        return;
+
+    }
+
+    const path = video.dataset.mediaPath;
+
+    if (!path) {
+
+        return;
+
+    }
+
+    const source = video.querySelector("source");
+
+    const currentSrc = source ? source.getAttribute("src") : video.getAttribute("src");
+
+    if (currentSrc) {
+
+        return;
+
+    }
+
+    setVideoSource(video, path);
+
+}
+
+function applyMediaConfig() {
+
+    setupHeroMedia();
+
+    setupFeaturedMedia();
+
+    setupAdsMedia();
+
+    setupServicesMedia();
 
     const logoPath = MEDIA_CONFIG.images.logo;
 
@@ -586,6 +668,74 @@ const heroVideo = document.querySelector(".hero-video");
 const featuredVideo = document.querySelector(".featured-video");
 
 const serviceVideos = document.querySelectorAll(".service-video");
+
+const servicesVisibility = new Map();
+
+let activeServiceVideo = null;
+
+function updateServicesPlayback() {
+
+    let winner = null;
+
+    let bestRatio = 0;
+
+    serviceVideos.forEach((video) => {
+
+        if (video.classList.contains("is-fallback")) {
+
+            return;
+
+        }
+
+        const ratio = servicesVisibility.get(video) || 0;
+
+        if (ratio > bestRatio) {
+
+            bestRatio = ratio;
+
+            winner = video;
+
+        }
+
+    });
+
+    serviceVideos.forEach((video) => {
+
+        if (video === winner) {
+
+            return;
+
+        }
+
+        video.pause();
+
+    });
+
+    if (winner && bestRatio > 0) {
+
+        ensureServiceVideoSource(winner);
+
+        winner.muted = true;
+
+        if (activeServiceVideo && activeServiceVideo !== winner) {
+
+            activeServiceVideo.pause();
+
+        }
+
+        activeServiceVideo = winner;
+
+        winner.play().catch(function () {});
+
+    } else if (activeServiceVideo) {
+
+        activeServiceVideo.pause();
+
+        activeServiceVideo = null;
+
+    }
+
+}
 
 const adsVideos = document.querySelectorAll(".ads-video");
 
@@ -875,7 +1025,7 @@ threshold:0.55
 
 videos.forEach(video=>{
 
-if(!video.classList.contains("ads-video")){
+if(!video.classList.contains("ads-video")&&!video.classList.contains("service-video")){
 
 videoObserver.observe(video);
 
@@ -923,7 +1073,7 @@ SERVICE VIDEO AUDIO
 
 const portfolioVideos=document.querySelectorAll(
 
-".featured-video,.service-video"
+".featured-video"
 
 );
 
@@ -1022,6 +1172,50 @@ adsVideos.forEach((video) => {
 });
 
 /*=========================================================
+SERVICES PLAYBACK
+=========================================================*/
+
+const servicesObserver = new IntersectionObserver(
+
+    (entries) => {
+
+        entries.forEach((entry) => {
+
+            const video = entry.target;
+
+            if (!entry.isIntersecting || entry.intersectionRatio <= 0) {
+
+                servicesVisibility.set(video, 0);
+
+                video.pause();
+
+            } else {
+
+                servicesVisibility.set(video, entry.intersectionRatio);
+
+            }
+
+        });
+
+        updateServicesPlayback();
+
+    },
+
+    {
+
+        threshold: [0, 0.15, 0.35, 0.55, 0.75, 1]
+
+    }
+
+);
+
+serviceVideos.forEach((video) => {
+
+    servicesObserver.observe(video);
+
+});
+
+/*=========================================================
 REPLAY
 =========================================================*/
 
@@ -1059,7 +1253,7 @@ video.pause();
 
 videos.forEach(video=>{
 
-if(video.classList.contains("ads-video")){
+if(video.classList.contains("ads-video")||video.classList.contains("service-video")){
 
 return;
 
@@ -1083,6 +1277,8 @@ video.play().catch(()=>{});
 
 updateAdsPlayback();
 
+updateServicesPlayback();
+
 }
 
 });
@@ -1093,7 +1289,7 @@ LAZY PLAY
 
 videos.forEach(video=>{
 
-if(video.classList.contains("ads-video")){
+if(video.classList.contains("ads-video")||video.classList.contains("service-video")){
 
 return;
 
