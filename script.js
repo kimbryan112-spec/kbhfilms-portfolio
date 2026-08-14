@@ -285,11 +285,101 @@ function setupHeroMedia() {
 
 }
 
+function setupFeaturedMedia() {
+
+    if (!featuredVideo) {
+
+        return;
+
+    }
+
+    const posterUrl = getMediaUrl(MEDIA_CONFIG.backgrounds.heroPoster);
+
+    const wrapper = featuredVideo.closest(".featured-media");
+
+    featuredVideo.poster = posterUrl;
+
+    featuredVideo.muted = true;
+
+    featuredVideo.playsInline = true;
+
+    featuredVideo.preload = "metadata";
+
+    featuredVideo.setAttribute("playsinline", "");
+
+    featuredVideo.setAttribute("webkit-playsinline", "");
+
+    if (wrapper) {
+
+        wrapper.style.backgroundImage = "url(\"" + posterUrl + "\")";
+
+        wrapper.style.backgroundSize = "cover";
+
+        wrapper.style.backgroundPosition = "center";
+
+        wrapper.style.backgroundRepeat = "no-repeat";
+
+    }
+
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+
+    const saveData = Boolean(connection && (connection.saveData || connection.effectiveType === "slow-2g"));
+
+    function revealFeaturedVideo() {
+
+        if (featuredVideo.classList.contains("is-fallback")) {
+
+            return;
+
+        }
+
+        featuredVideo.classList.add("is-ready");
+
+        featuredVideo.play().catch(function () {});
+
+    }
+
+    function fallbackFeaturedVideo() {
+
+        featuredVideo.classList.add("is-fallback");
+
+        featuredVideo.classList.remove("is-ready");
+
+        featuredVideo.pause();
+
+        const source = featuredVideo.querySelector("source");
+
+        if (source) {
+
+            source.removeAttribute("src");
+
+        }
+
+        featuredVideo.removeAttribute("src");
+
+    }
+
+    featuredVideo.addEventListener("playing", revealFeaturedVideo);
+
+    featuredVideo.addEventListener("canplay", revealFeaturedVideo);
+
+    featuredVideo.addEventListener("error", fallbackFeaturedVideo);
+
+    if (saveData) {
+
+        return;
+
+    }
+
+    setVideoSource(featuredVideo, MEDIA_CONFIG.featured);
+
+}
+
 function applyMediaConfig() {
 
     setupHeroMedia();
 
-    setVideoSource(featuredVideo, MEDIA_CONFIG.featured);
+    setupFeaturedMedia();
 
     const servicePaths = [
 
