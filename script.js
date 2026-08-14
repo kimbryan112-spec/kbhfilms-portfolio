@@ -303,9 +303,7 @@ function setupHeroMedia() {
 
     }
 
-    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-
-    const saveData = Boolean(connection && (connection.saveData || connection.effectiveType === "slow-2g"));
+    const saveData = isSaveDataConnection();
 
     function revealHeroVideo() {
 
@@ -397,9 +395,7 @@ function setupFeaturedMedia() {
 
     }
 
-    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-
-    const saveData = Boolean(connection && (connection.saveData || connection.effectiveType === "slow-2g"));
+    const saveData = isSaveDataConnection();
 
     function revealFeaturedVideo() {
 
@@ -659,27 +655,23 @@ function fallbackAboutPortrait(image, card) {
 
 function setupAboutMedia() {
 
-    const aboutSection = document.querySelector(".about");
+    const aboutImageCard = aboutPortraitImage ? aboutPortraitImage.closest(".about-image") : null;
 
-    const portraitImage = document.querySelector(".about-image img");
+    if (aboutPortraitImage) {
 
-    const aboutImageCard = portraitImage ? portraitImage.closest(".about-image") : null;
+        aboutPortraitImage.loading = "lazy";
 
-    if (portraitImage) {
+        aboutPortraitImage.decoding = "async";
 
-        portraitImage.loading = "lazy";
+        aboutPortraitImage.fetchPriority = "low";
 
-        portraitImage.decoding = "async";
+        aboutPortraitImage.addEventListener("error", function () {
 
-        portraitImage.fetchPriority = "low";
-
-        portraitImage.addEventListener("error", function () {
-
-            fallbackAboutPortrait(portraitImage, aboutImageCard);
+            fallbackAboutPortrait(aboutPortraitImage, aboutImageCard);
 
         }, { once: true });
 
-        setImageSource(portraitImage, MEDIA_CONFIG.images.portrait);
+        setImageSource(aboutPortraitImage, MEDIA_CONFIG.images.portrait);
 
     }
 
@@ -712,6 +704,10 @@ function setupAboutMedia() {
         aboutSection.style.background =
 
             "radial-gradient(circle at top right, rgba(255,255,255,.03), transparent 40%), url(\"" + bgUrl + "\") center/cover no-repeat, #080808";
+
+        bgProbe.onload = null;
+
+        bgProbe.onerror = null;
 
     }, { once: true });
 
@@ -961,6 +957,16 @@ const cursor = document.querySelector(".cursor");
 
 const cursorDot = document.querySelector(".cursor-dot");
 
+const aboutSection = document.querySelector(".about");
+
+const aboutPortraitImage = document.querySelector(".about-image img");
+
+const scrollIndicator = document.querySelector(".scroll-indicator");
+
+const anchorLinks = document.querySelectorAll('a[href^="#"]');
+
+const btnElements = document.querySelectorAll(".btn");
+
 applyMediaConfig();
 
 setupContactLinks();
@@ -982,12 +988,20 @@ window.addEventListener("load", () => {
 });
 
 /*=========================================================
-NAVBAR
+NAVBAR / PARALLAX / SCROLL INDICATOR
 =========================================================*/
 
-window.addEventListener("scroll", () => {
+let scrollTicking = false;
 
-    if (window.scrollY > 80) {
+let lastScrollY = window.scrollY;
+
+function handleScrollFrame() {
+
+    scrollTicking = false;
+
+    const y = lastScrollY;
+
+    if (y > 80) {
 
         navbar.classList.add("scrolled");
 
@@ -997,7 +1011,31 @@ window.addEventListener("scroll", () => {
 
     }
 
-});
+    heroVideo.style.transform =
+
+        `scale(1.08) translateY(${y * 0.12}px)`;
+
+    if (scrollIndicator) {
+
+        scrollIndicator.style.opacity = y > 150 ? "0" : "1";
+
+    }
+
+}
+
+window.addEventListener("scroll", () => {
+
+    lastScrollY = window.scrollY;
+
+    if (!scrollTicking) {
+
+        scrollTicking = true;
+
+        requestAnimationFrame(handleScrollFrame);
+
+    }
+
+}, { passive: true });
 
 /*=========================================================
 MOBILE MENU
@@ -1027,33 +1065,75 @@ mobileMenu.querySelectorAll("a").forEach(link => {
 CUSTOM CURSOR
 =========================================================*/
 
-window.addEventListener("mousemove", e => {
+let cursorTicking = false;
 
-    cursor.style.transform =
+let cursorX = 0;
 
-        `translate(${e.clientX}px,${e.clientY}px)`;
+let cursorY = 0;
 
-    cursorDot.style.transform =
+window.addEventListener("mousemove", (e) => {
 
-        `translate(${e.clientX}px,${e.clientY}px)`;
+    cursorX = e.clientX;
 
-});
+    cursorY = e.clientY;
+
+    if (!cursorTicking) {
+
+        cursorTicking = true;
+
+        requestAnimationFrame(() => {
+
+            cursorTicking = false;
+
+            const transform = `translate(${cursorX}px,${cursorY}px)`;
+
+            cursor.style.transform = transform;
+
+            cursorDot.style.transform = transform;
+
+        });
+
+    }
+
+}, { passive: true });
 
 /*=========================================================
-BUTTON HOVER
+BUTTON HOVER / RIPPLE
 =========================================================*/
 
-document.querySelectorAll(".btn").forEach(btn=>{
+btnElements.forEach(btn => {
 
-    btn.addEventListener("mouseenter",()=>{
+    btn.addEventListener("mouseenter", () => {
 
         cursor.classList.add("active");
 
     });
 
-    btn.addEventListener("mouseleave",()=>{
+    btn.addEventListener("mouseleave", () => {
 
         cursor.classList.remove("active");
+
+    });
+
+    btn.addEventListener("click", (e) => {
+
+        const ripple = document.createElement("span");
+
+        ripple.className = "ripple";
+
+        const rect = btn.getBoundingClientRect();
+
+        ripple.style.left = `${e.clientX - rect.left}px`;
+
+        ripple.style.top = `${e.clientY - rect.top}px`;
+
+        btn.appendChild(ripple);
+
+        setTimeout(() => {
+
+            ripple.remove();
+
+        }, 700);
 
     });
 
@@ -1072,6 +1152,8 @@ entries.forEach(entry=>{
 if(entry.isIntersecting){
 
 entry.target.classList.add("show");
+
+revealObserver.unobserve(entry.target);
 
 }
 
@@ -1097,7 +1179,7 @@ revealObserver.observe(section);
 SMOOTH SCROLL
 =========================================================*/
 
-document.querySelectorAll('a[href^="#"]').forEach(anchor=>{
+anchorLinks.forEach(anchor=>{
 
 anchor.addEventListener("click",function(e){
 
@@ -1123,18 +1205,6 @@ SMART VIDEO SYSTEM
 
 const videos = document.querySelectorAll("video");
 
-function pauseAllVideos() {
-
-    videos.forEach(video => {
-
-        video.pause();
-
-        video.muted = true;
-
-    });
-
-}
-
 const videoObserver = new IntersectionObserver(
 
 (entries) => {
@@ -1145,6 +1215,8 @@ const video = entry.target;
 
 if (entry.isIntersecting) {
 
+if (video.paused) {
+
 const promise = video.play();
 
 if (promise !== undefined) {
@@ -1153,9 +1225,15 @@ promise.catch(() => {});
 
 }
 
+}
+
 } else {
 
+if (!video.paused) {
+
 video.pause();
+
+}
 
 }
 
@@ -1197,7 +1275,11 @@ heroVideo.muted=true;
 
 }else{
 
+if(!heroVideo.paused){
+
 heroVideo.pause();
+
+}
 
 }
 
@@ -1216,14 +1298,8 @@ threshold:.35
 heroObserver.observe(hero);
 
 /*=========================================================
-SERVICE VIDEO AUDIO
+FEATURED VIDEO AUDIO
 =========================================================*/
-
-const portfolioVideos=document.querySelectorAll(
-
-".featured-video"
-
-);
 
 const audioObserver=new IntersectionObserver(
 
@@ -1235,23 +1311,21 @@ const video=entry.target;
 
 if(entry.isIntersecting){
 
-portfolioVideos.forEach(v=>{
-
-if(v!==video){
-
-v.muted=true;
-
-}
-
-});
-
 video.muted=false;
+
+if(video.paused){
 
 video.play().catch(()=>{});
 
+}
+
 }else{
 
+if(!video.paused){
+
 video.pause();
+
+}
 
 video.muted=true;
 
@@ -1269,11 +1343,11 @@ threshold:.75
 
 );
 
-portfolioVideos.forEach(video=>{
+if (featuredVideo) {
 
-audioObserver.observe(video);
+audioObserver.observe(featuredVideo);
 
-});
+}
 
 /*=========================================================
 ADS CAROUSEL PLAYBACK
@@ -1417,7 +1491,11 @@ rect.bottom>0
 
 ){
 
+if(video.paused){
+
 video.play().catch(()=>{});
+
+}
 
 }
 
@@ -1443,102 +1521,14 @@ return;
 
 }
 
+if(video.preload!=="metadata"){
+
 video.preload="metadata";
-
-});
-
-/*=========================================================
-PARALLAX HERO
-=========================================================*/
-
-window.addEventListener(
-
-"scroll",
-
-()=>{
-
-const y=window.scrollY;
-
-heroVideo.style.transform=
-
-`scale(1.08) translateY(${y*.12}px)`;
-
-});
-
-/*=========================================================
-BUTTON RIPPLE
-=========================================================*/
-
-document.querySelectorAll(".btn").forEach(btn=>{
-
-btn.addEventListener("click",e=>{
-
-const ripple=document.createElement("span");
-
-ripple.className="ripple";
-
-const rect=btn.getBoundingClientRect();
-
-ripple.style.left=
-
-`${e.clientX-rect.left}px`;
-
-ripple.style.top=
-
-`${e.clientY-rect.top}px`;
-
-btn.appendChild(ripple);
-
-setTimeout(()=>{
-
-ripple.remove();
-
-},700);
-
-});
-
-});
-
-/*=========================================================
-SCROLL INDICATOR
-=========================================================*/
-
-window.addEventListener(
-
-"scroll",
-
-()=>{
-
-const indicator=document.querySelector(
-
-".scroll-indicator"
-
-);
-
-if(window.scrollY>150){
-
-indicator.style.opacity="0";
-
-}else{
-
-indicator.style.opacity="1";
 
 }
 
 });
 
 /*=========================================================
-PERFORMANCE
+END
 =========================================================*/
-
-window.addEventListener(
-
-"resize",
-
-()=>{
-
-requestAnimationFrame(()=>{
-
-});
-
-});
