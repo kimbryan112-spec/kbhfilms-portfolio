@@ -617,6 +617,88 @@ function ensureServiceVideoSource(video) {
 
 }
 
+function fallbackAboutPortrait(image, card) {
+
+    if (!image) {
+
+        return;
+
+    }
+
+    image.classList.add("is-fallback");
+
+    image.removeAttribute("src");
+
+    if (card) {
+
+        card.classList.add("is-fallback");
+
+    }
+
+}
+
+function setupAboutMedia() {
+
+    const aboutSection = document.querySelector(".about");
+
+    const portraitImage = document.querySelector(".about-image img");
+
+    const aboutImageCard = portraitImage ? portraitImage.closest(".about-image") : null;
+
+    if (portraitImage) {
+
+        portraitImage.loading = "lazy";
+
+        portraitImage.decoding = "async";
+
+        portraitImage.fetchPriority = "low";
+
+        portraitImage.addEventListener("error", function () {
+
+            fallbackAboutPortrait(portraitImage, aboutImageCard);
+
+        }, { once: true });
+
+        setImageSource(portraitImage, MEDIA_CONFIG.images.portrait);
+
+    }
+
+    if (!aboutSection) {
+
+        return;
+
+    }
+
+    const bgPath = MEDIA_CONFIG.backgrounds.about;
+
+    if (!bgPath) {
+
+        return;
+
+    }
+
+    const bgUrl = getMediaUrl(bgPath);
+
+    if (!bgUrl) {
+
+        return;
+
+    }
+
+    const bgProbe = new Image();
+
+    bgProbe.addEventListener("load", function () {
+
+        aboutSection.style.background =
+
+            "radial-gradient(circle at top right, rgba(255,255,255,.03), transparent 40%), url(\"" + bgUrl + "\") center/cover no-repeat, #080808";
+
+    }, { once: true });
+
+    bgProbe.src = bgUrl;
+
+}
+
 function applyMediaConfig() {
 
     setupHeroMedia();
@@ -626,6 +708,8 @@ function applyMediaConfig() {
     setupAdsMedia();
 
     setupServicesMedia();
+
+    setupAboutMedia();
 
     const logoPath = MEDIA_CONFIG.images.logo;
 
@@ -638,14 +722,6 @@ function applyMediaConfig() {
         setImageSource(image, logoPath);
 
     });
-
-    setImageSource(
-
-        document.querySelector(".about-image img"),
-
-        MEDIA_CONFIG.images.portrait
-
-    );
 
 }
 

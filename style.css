@@ -1519,6 +1519,12 @@ ABOUT
 
 }
 
+.about-image.is-fallback img{
+
+    visibility:hidden;
+
+}
+
 .about-image:hover img{
 
     transform:scale(1.05);
