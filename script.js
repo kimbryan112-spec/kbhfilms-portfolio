@@ -11,7 +11,7 @@ MEDIA CONFIGURATION (Cloudflare R2)
 const MEDIA_CONFIG = {
 
     /* Public origin or custom domain only. Never include the bucket name. */
-    MEDIA_BASE: "https://YOUR-R2-PUBLIC-DOMAIN",
+    MEDIA_BASE: "https://pub-326f0fe546cd4f779b6b3e9b276a3e2e.r2.dev",
 
     hero: "hero/hero.mp4",
 
