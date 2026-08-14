@@ -1165,6 +1165,22 @@ ADS SHOWCASE
 
 }
 
+.ads-video.is-fallback{
+
+    opacity:0;
+
+    visibility:hidden;
+
+    pointer-events:none;
+
+}
+
+.ads-card.is-fallback{
+
+    background:#111;
+
+}
+
 @keyframes adsMove{
 
     from{

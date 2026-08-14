@@ -193,6 +193,62 @@ function setImageSource(image, path) {
 
 }
 
+function isSaveDataConnection() {
+
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+
+    return Boolean(connection && (connection.saveData || connection.effectiveType === "slow-2g"));
+
+}
+
+function isMobileViewport() {
+
+    return window.matchMedia("(max-width: 768px)").matches;
+
+}
+
+function clearVideoSource(video) {
+
+    if (!video) {
+
+        return;
+
+    }
+
+    const source = video.querySelector("source");
+
+    if (source) {
+
+        source.removeAttribute("src");
+
+    }
+
+    video.removeAttribute("src");
+
+}
+
+function fallbackVideoElement(video, card) {
+
+    if (!video) {
+
+        return;
+
+    }
+
+    video.classList.add("is-fallback");
+
+    video.pause();
+
+    clearVideoSource(video);
+
+    if (card) {
+
+        card.classList.add("is-fallback");
+
+    }
+
+}
+
 function setupHeroMedia() {
 
     if (!heroVideo) {
@@ -375,11 +431,101 @@ function setupFeaturedMedia() {
 
 }
 
+function setupAdsMedia() {
+
+    if (!adsVideos.length) {
+
+        return;
+
+    }
+
+    const saveData = isSaveDataConnection();
+
+    const mobile = isMobileViewport();
+
+    const ads = MEDIA_CONFIG.ads;
+
+    adsVideos.forEach((video, index) => {
+
+        const path = ads[index % ads.length];
+
+        const card = video.closest(".ads-card");
+
+        video.muted = true;
+
+        video.playsInline = true;
+
+        video.preload = mobile ? "none" : "metadata";
+
+        video.setAttribute("playsinline", "");
+
+        video.setAttribute("webkit-playsinline", "");
+
+        video.dataset.mediaPath = path;
+
+        video.addEventListener("error", function () {
+
+            fallbackVideoElement(video, card);
+
+            adsVisibility.delete(video);
+
+            updateAdsPlayback();
+
+        });
+
+        if (saveData) {
+
+            return;
+
+        }
+
+        if (!mobile) {
+
+            setVideoSource(video, path);
+
+        }
+
+    });
+
+}
+
+function ensureAdVideoSource(video) {
+
+    if (!video || video.classList.contains("is-fallback") || isSaveDataConnection()) {
+
+        return;
+
+    }
+
+    const path = video.dataset.mediaPath;
+
+    if (!path) {
+
+        return;
+
+    }
+
+    const source = video.querySelector("source");
+
+    const currentSrc = source ? source.getAttribute("src") : video.getAttribute("src");
+
+    if (currentSrc) {
+
+        return;
+
+    }
+
+    setVideoSource(video, path);
+
+}
+
 function applyMediaConfig() {
 
     setupHeroMedia();
 
     setupFeaturedMedia();
+
+    setupAdsMedia();
 
     const servicePaths = [
 
@@ -396,14 +542,6 @@ function applyMediaConfig() {
     serviceVideos.forEach((video, index) => {
 
         setVideoSource(video, servicePaths[index]);
-
-    });
-
-    adsVideos.forEach((video, index) => {
-
-        const ads = MEDIA_CONFIG.ads;
-
-        setVideoSource(video, ads[index % ads.length]);
 
     });
 
@@ -450,6 +588,74 @@ const featuredVideo = document.querySelector(".featured-video");
 const serviceVideos = document.querySelectorAll(".service-video");
 
 const adsVideos = document.querySelectorAll(".ads-video");
+
+const adsVisibility = new Map();
+
+let activeAdVideo = null;
+
+function updateAdsPlayback() {
+
+    let winner = null;
+
+    let bestRatio = 0;
+
+    adsVideos.forEach((video) => {
+
+        if (video.classList.contains("is-fallback")) {
+
+            return;
+
+        }
+
+        const ratio = adsVisibility.get(video) || 0;
+
+        if (ratio > bestRatio) {
+
+            bestRatio = ratio;
+
+            winner = video;
+
+        }
+
+    });
+
+    adsVideos.forEach((video) => {
+
+        if (video === winner) {
+
+            return;
+
+        }
+
+        video.pause();
+
+    });
+
+    if (winner && bestRatio > 0) {
+
+        ensureAdVideoSource(winner);
+
+        winner.muted = true;
+
+        if (activeAdVideo && activeAdVideo !== winner) {
+
+            activeAdVideo.pause();
+
+        }
+
+        activeAdVideo = winner;
+
+        winner.play().catch(function () {});
+
+    } else if (activeAdVideo) {
+
+        activeAdVideo.pause();
+
+        activeAdVideo = null;
+
+    }
+
+}
 
 const revealElements = document.querySelectorAll(".section");
 
@@ -669,7 +875,11 @@ threshold:0.55
 
 videos.forEach(video=>{
 
+if(!video.classList.contains("ads-video")){
+
 videoObserver.observe(video);
+
+}
 
 });
 
@@ -713,7 +923,7 @@ SERVICE VIDEO AUDIO
 
 const portfolioVideos=document.querySelectorAll(
 
-".featured-video,.service-video,.ads-video"
+".featured-video,.service-video"
 
 );
 
@@ -768,6 +978,50 @@ audioObserver.observe(video);
 });
 
 /*=========================================================
+ADS CAROUSEL PLAYBACK
+=========================================================*/
+
+const adsObserver = new IntersectionObserver(
+
+    (entries) => {
+
+        entries.forEach((entry) => {
+
+            const video = entry.target;
+
+            if (!entry.isIntersecting || entry.intersectionRatio <= 0) {
+
+                adsVisibility.set(video, 0);
+
+                video.pause();
+
+            } else {
+
+                adsVisibility.set(video, entry.intersectionRatio);
+
+            }
+
+        });
+
+        updateAdsPlayback();
+
+    },
+
+    {
+
+        threshold: [0, 0.15, 0.35, 0.55, 0.75, 1]
+
+    }
+
+);
+
+adsVideos.forEach((video) => {
+
+    adsObserver.observe(video);
+
+});
+
+/*=========================================================
 REPLAY
 =========================================================*/
 
@@ -805,6 +1059,12 @@ video.pause();
 
 videos.forEach(video=>{
 
+if(video.classList.contains("ads-video")){
+
+return;
+
+}
+
 const rect=video.getBoundingClientRect();
 
 if(
@@ -821,6 +1081,8 @@ video.play().catch(()=>{});
 
 });
 
+updateAdsPlayback();
+
 }
 
 });
@@ -830,6 +1092,12 @@ LAZY PLAY
 =========================================================*/
 
 videos.forEach(video=>{
+
+if(video.classList.contains("ads-video")){
+
+return;
+
+}
 
 video.preload="metadata";
 
