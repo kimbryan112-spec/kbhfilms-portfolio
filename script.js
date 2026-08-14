@@ -133,6 +133,26 @@ const SITE_CONFIG = {
 
 };
 
+const CONTACT_CONFIG = {
+
+    email: "hello@kbhfilms.com",
+
+    facebook: "https://facebook.com/kbhfilms",
+
+    instagram: "https://instagram.com/kbhfilms",
+
+    youtube: "https://youtube.com/@kbhfilms",
+
+    cta: {
+
+        contact: "#contact",
+
+        portfolio: "#portfolio"
+
+    }
+
+};
+
 function getMediaUrl(path) {
 
     const base = String(MEDIA_CONFIG.MEDIA_BASE || "").replace(/\/+$/, "");
@@ -699,6 +719,56 @@ function setupAboutMedia() {
 
 }
 
+function setupContactLinks() {
+
+    const contactDestination = CONTACT_CONFIG.cta.contact;
+
+    const portfolioDestination = CONTACT_CONFIG.cta.portfolio;
+
+    document.querySelectorAll('a[href="#contact"]').forEach(function (link) {
+
+        link.href = contactDestination;
+
+    });
+
+    document.querySelectorAll('a[href="#portfolio"]').forEach(function (link) {
+
+        link.href = portfolioDestination;
+
+    });
+
+    const contactGridLinks = document.querySelectorAll(".contact-grid a");
+
+    if (contactGridLinks.length >= 4) {
+
+        if (CONTACT_CONFIG.email) {
+
+            contactGridLinks[0].href = "mailto:" + CONTACT_CONFIG.email;
+
+        }
+
+        if (CONTACT_CONFIG.instagram) {
+
+            contactGridLinks[1].href = CONTACT_CONFIG.instagram;
+
+        }
+
+        if (CONTACT_CONFIG.facebook) {
+
+            contactGridLinks[2].href = CONTACT_CONFIG.facebook;
+
+        }
+
+        if (CONTACT_CONFIG.youtube) {
+
+            contactGridLinks[3].href = CONTACT_CONFIG.youtube;
+
+        }
+
+    }
+
+}
+
 function applyMediaConfig() {
 
     setupHeroMedia();
@@ -892,6 +962,8 @@ const cursor = document.querySelector(".cursor");
 const cursorDot = document.querySelector(".cursor-dot");
 
 applyMediaConfig();
+
+setupContactLinks();
 
 /*=========================================================
 PRELOADER
