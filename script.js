@@ -5,6 +5,341 @@ KBHFILMS V2
 "use strict";
 
 /*=========================================================
+MEDIA CONFIGURATION (Cloudflare R2)
+=========================================================*/
+
+const MEDIA_CONFIG = {
+
+    /* Public origin or custom domain only. Never include the bucket name. */
+    MEDIA_BASE: "https://YOUR-R2-PUBLIC-DOMAIN",
+
+    hero: "hero/hero.mp4",
+
+    featured: "featured/showreel.mp4",
+
+    services: {
+
+        commercial: "services/commercial.mp4",
+
+        ugc: "services/ugc.mp4",
+
+        podcast: "services/podcast.mp4",
+
+        wedding: "services/wedding.mp4"
+
+    },
+
+    ads: [
+
+        "ads/ads01.mp4",
+
+        "ads/ads02.mp4",
+
+        "ads/ads03.mp4",
+
+        "ads/ads04.mp4",
+
+        "ads/ads05.mp4",
+
+        "ads/ads06.mp4",
+
+        "ads/ads07.mp4",
+
+        "ads/ads08.mp4",
+
+        "ads/ads09.mp4",
+
+        "ads/ads10.mp4"
+
+    ],
+
+    images: {
+
+        logo: "images/logo.png",
+
+        portrait: "images/portrait.webp",
+
+        favicon: "images/favicon.png",
+
+        appleTouchIcon: "images/apple-touch-icon.png",
+
+        ogImage: "images/og-image.jpg"
+
+    },
+
+    backgrounds: {
+
+        about: "backgrounds/about-bg.webp",
+
+        manifesto: "backgrounds/manifesto-bg.webp",
+
+        heroPoster: "backgrounds/hero-poster.webp"
+
+    }
+
+};
+
+/*=========================================================
+SITE CONFIGURATION
+=========================================================*/
+
+const SITE_CONFIG = {
+
+    site: {
+
+        companyName: "KBHFILMS",
+
+        tagline: "Stories That Move People.",
+
+        author: "KBHFILMS",
+
+        copyright: "© 2025 KBHFILMS. All Rights Reserved."
+
+    },
+
+    contact: {
+
+        email: "",
+
+        phone: ""
+
+    },
+
+    social: {
+
+        instagram: "",
+
+        facebook: "",
+
+        youtube: ""
+
+    },
+
+    seo: {
+
+        title: "KBHFILMS | Cinematic Filmmaker Portfolio",
+
+        description: "Premium filmmaker portfolio showcasing cinematic commercials, weddings, podcasts and UGC content by KBHFILMS.",
+
+        keywords: "Filmmaker, Videographer, Cinematic, Wedding, Commercial, UGC, Podcast",
+
+        ogImage: "images/og-image.jpg",
+
+        favicon: "images/favicon.png",
+
+        appleTouchIcon: "images/apple-touch-icon.png"
+
+    }
+
+};
+
+function getMediaUrl(path) {
+
+    const base = String(MEDIA_CONFIG.MEDIA_BASE || "").replace(/\/+$/, "");
+
+    const relative = String(path || "").replace(/^\/+/, "");
+
+    if (!relative) {
+
+        return "";
+
+    }
+
+    if (!base) {
+
+        return relative;
+
+    }
+
+    return `${base}/${relative}`;
+
+}
+
+function setVideoSource(video, path) {
+
+    if (!video || !path) {
+
+        return;
+
+    }
+
+    const url = getMediaUrl(path);
+
+    const source = video.querySelector("source");
+
+    if (source) {
+
+        source.src = url;
+
+    } else {
+
+        video.src = url;
+
+    }
+
+    video.load();
+
+}
+
+function setImageSource(image, path) {
+
+    if (!image || !path) {
+
+        return;
+
+    }
+
+    image.src = getMediaUrl(path);
+
+}
+
+function setupHeroMedia() {
+
+    if (!heroVideo) {
+
+        return;
+
+    }
+
+    const posterUrl = getMediaUrl(MEDIA_CONFIG.backgrounds.heroPoster);
+
+    const wrapper = heroVideo.closest(".hero-video-wrapper");
+
+    heroVideo.poster = posterUrl;
+
+    heroVideo.muted = true;
+
+    heroVideo.autoplay = true;
+
+    heroVideo.playsInline = true;
+
+    heroVideo.preload = "metadata";
+
+    heroVideo.controls = false;
+
+    heroVideo.setAttribute("playsinline", "");
+
+    heroVideo.setAttribute("webkit-playsinline", "");
+
+    if (wrapper) {
+
+        wrapper.style.backgroundImage = "url(\"" + posterUrl + "\")";
+
+    }
+
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+
+    const saveData = Boolean(connection && (connection.saveData || connection.effectiveType === "slow-2g"));
+
+    function revealHeroVideo() {
+
+        if (heroVideo.classList.contains("is-fallback")) {
+
+            return;
+
+        }
+
+        heroVideo.classList.add("is-ready");
+
+        heroVideo.play().catch(function () {});
+
+    }
+
+    function fallbackHeroVideo() {
+
+        heroVideo.classList.add("is-fallback");
+
+        heroVideo.classList.remove("is-ready");
+
+        heroVideo.controls = false;
+
+        heroVideo.removeAttribute("controls");
+
+        heroVideo.pause();
+
+        const source = heroVideo.querySelector("source");
+
+        if (source) {
+
+            source.removeAttribute("src");
+
+        }
+
+        heroVideo.removeAttribute("src");
+
+    }
+
+    heroVideo.addEventListener("playing", revealHeroVideo);
+
+    heroVideo.addEventListener("canplay", revealHeroVideo);
+
+    heroVideo.addEventListener("error", fallbackHeroVideo);
+
+    if (saveData) {
+
+        return;
+
+    }
+
+    setVideoSource(heroVideo, MEDIA_CONFIG.hero);
+
+}
+
+function applyMediaConfig() {
+
+    setupHeroMedia();
+
+    setVideoSource(featuredVideo, MEDIA_CONFIG.featured);
+
+    const servicePaths = [
+
+        MEDIA_CONFIG.services.commercial,
+
+        MEDIA_CONFIG.services.ugc,
+
+        MEDIA_CONFIG.services.podcast,
+
+        MEDIA_CONFIG.services.wedding
+
+    ];
+
+    serviceVideos.forEach((video, index) => {
+
+        setVideoSource(video, servicePaths[index]);
+
+    });
+
+    adsVideos.forEach((video, index) => {
+
+        const ads = MEDIA_CONFIG.ads;
+
+        setVideoSource(video, ads[index % ads.length]);
+
+    });
+
+    const logoPath = MEDIA_CONFIG.images.logo;
+
+    document.querySelectorAll(
+
+        ".preloader-logo, .logo img, .featured-logo img, footer img"
+
+    ).forEach(image => {
+
+        setImageSource(image, logoPath);
+
+    });
+
+    setImageSource(
+
+        document.querySelector(".about-image img"),
+
+        MEDIA_CONFIG.images.portrait
+
+    );
+
+}
+
+/*=========================================================
 SELECTORS
 =========================================================*/
 
@@ -33,6 +368,8 @@ const preloader = document.querySelector(".preloader");
 const cursor = document.querySelector(".cursor");
 
 const cursorDot = document.querySelector(".cursor-dot");
+
+applyMediaConfig();
 
 /*=========================================================
 PRELOADER

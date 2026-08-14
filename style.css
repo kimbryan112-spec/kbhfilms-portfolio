@@ -637,6 +637,12 @@ HERO
 
     overflow:hidden;
 
+    background-size:cover;
+
+    background-position:center;
+
+    background-repeat:no-repeat;
+
 }
 
 .hero-video{
@@ -650,6 +656,26 @@ HERO
     transform:scale(1.08);
 
     will-change:transform;
+
+    opacity:0;
+
+    transition:opacity .7s ease;
+
+}
+
+.hero-video.is-ready{
+
+    opacity:1;
+
+}
+
+.hero-video.is-fallback{
+
+    opacity:0;
+
+    visibility:hidden;
+
+    pointer-events:none;
 
 }
 

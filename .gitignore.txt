@@ -1,0 +1,33 @@
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Node modules (future-proof)
+node_modules/
+
+# Environment files
+.env
+.env.local
+
+# Build folders
+dist/
+build/
+
+# Cache
+.cache/
+
+# Coverage
+coverage/
